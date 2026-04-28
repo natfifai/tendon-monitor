@@ -1,0 +1,46 @@
+These keys need to be added to ios/App/App/Info.plist after running
+`npx cap add ios` for the first time. The Capacitor iOS project is generated
+from your web build, these entries ensure App Store submission works.
+
+Add inside the <dict> at the root of Info.plist:
+
+<key>NSLocalNetworkUsageDescription</key>
+<string>This app connects to your tendon monitoring device over your local WiFi network.</string>
+
+<key>NSBonjourServices</key>
+<array>
+  <string>_http._tcp</string>
+</array>
+
+If the hardware device uses HTTP (not HTTPS), you will also need App Transport
+Security exceptions. Add:
+
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoadsInWebContent</key>
+  <false/>
+  <key>NSExceptionDomains</key>
+  <dict>
+    <key>LOCAL_DEVICE_IP_OR_DOMAIN</key>
+    <dict>
+      <key>NSExceptionAllowsInsecureHTTPLoads</key>
+      <true/>
+    </dict>
+  </dict>
+</dict>
+
+But prefer HTTPS if the device supports it. Apple reviewers scrutinize ATS
+exceptions and may ask you to justify them.
+
+Standard keys (usually auto-added by Capacitor but verify):
+
+<key>UILaunchStoryboardName</key>
+<string>LaunchScreen</string>
+
+<key>UIRequiresFullScreen</key>
+<true/>
+
+<key>UISupportedInterfaceOrientations</key>
+<array>
+  <string>UIInterfaceOrientationPortrait</string>
+</array>
