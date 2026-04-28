@@ -23,3 +23,4 @@ React, Vite, Tailwind, Supabase, Builder.io, Capacitor.
 ## For Claude Code
 
 Read `CLAUDE.md` first. It contains everything needed to understand and modify this project.
+# tendon-monitor
