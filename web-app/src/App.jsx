@@ -7,6 +7,7 @@ import LayoutRenderer from './sdui/LayoutRenderer.jsx'
 import { useReadings } from './hooks/useReadings.js'
 import { useRecording } from './hooks/useRecording.js'
 import { useConfig } from './hooks/useConfig.js'
+import { MonitorContext } from './context/MonitorContext.jsx'
 
 const USE_BUILDER_LAYOUT = true
 
@@ -46,27 +47,17 @@ export default function App() {
     )
   }
 
-  if (USE_BUILDER_LAYOUT && config?.builderContentId) {
-    return (
-      <LayoutRenderer
-        contentId={config.builderContentId}
-        fallback={
-          <DefaultLayout
-            config={config}
-            readings={readings}
-            latest={latest}
-            isRecording={isRecording}
-            onStart={start}
-            onStop={stop}
-            connectionStatus={connectionStatus}
-            recordError={recordError}
-          />
-        }
-      />
-    )
+  const monitorValue = {
+    readings,
+    latest,
+    isRecording,
+    connectionStatus,
+    config,
+    start,
+    stop,
   }
 
-  return (
+  const defaultLayout = (
     <DefaultLayout
       config={config}
       readings={readings}
@@ -77,6 +68,19 @@ export default function App() {
       connectionStatus={connectionStatus}
       recordError={recordError}
     />
+  )
+
+  return (
+    <MonitorContext.Provider value={monitorValue}>
+      {USE_BUILDER_LAYOUT && config?.builderContentId ? (
+        <LayoutRenderer
+          contentId={config.builderContentId}
+          fallback={defaultLayout}
+        />
+      ) : (
+        defaultLayout
+      )}
+    </MonitorContext.Provider>
   )
 }
 
